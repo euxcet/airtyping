@@ -25,15 +25,20 @@ class GestureSeq():
 
 
     def insertGesture(self, gesture):
+
         if (self.lastGesture != None):
             last = self.lastGesture
             if (gesture.GESTURE_TYPE == last.GESTURE_TYPE):
                 gap = gesture.timestamp - last.timestamp
                 if (gap < 0):
                     print "Warning: new gesture's timestamp is too small."
-                if (gesture.GESTURE_TYPE == "SWIPE"):
-                    if (gap < 0.5):
-                        return
+                if (gesture.GESTURE_TYPE == "SWIPE" and gap < 0.5):
+                    return
+                if (gesture.GESTURE_TYPE == "KEYTAP" and gap < 0.25):
+                    return
+
+        print "Insert gesture: ", gesture
+
         self.seq.put(gesture)
         self.lastGesture = gesture
 
