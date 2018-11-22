@@ -43,9 +43,9 @@ class Handler():
             return
 
         if (not (finger in startDict) or startDict[finger] != start):
-            print keytap.position
-            print keytap.start_position
-            print
+            #print keytap.position
+            #print keytap.start_position
+            #print
             startDict[finger] = start
             GestureSeq().insertGesture(KeyTapGesture(hand.palm_position, time.time()))
 

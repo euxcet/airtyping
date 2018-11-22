@@ -4,6 +4,7 @@ from leap import Leap
 from listener import Listener
 from gesture import *
 from gestureseq import *
+from parser import *
 
 from tkinter import *
 
@@ -37,6 +38,9 @@ def main():
 
     listener = Listener()
     controller.add_listener(listener)
+
+    parser = Parser()
+    parser.run()
 
     #Keep this process running until Enter is pressed
     print "Press Enter to quit..."

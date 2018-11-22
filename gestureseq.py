@@ -25,7 +25,6 @@ class GestureSeq():
 
 
     def insertGesture(self, gesture):
-
         if (self.lastGesture != None):
             last = self.lastGesture
             if (gesture.GESTURE_TYPE == last.GESTURE_TYPE):
