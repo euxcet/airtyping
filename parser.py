@@ -10,7 +10,6 @@ class Parser():
         self.inputSeq = []
         self.dictionary = Dictionary('dict.txt')
 
-
     def deleteTail(self):
         if len(self.inputSeq) > 0:
             self.inputSeq.pop()
@@ -53,8 +52,11 @@ class Parser():
         if gesture.GESTURE_TYPE == "SWIPE":
             self.deleteTail()
         elif gesture.GESTURE_TYPE == "KEYTAP":
-            position = gesture.position
+            raw_position = gesture.position
+            position = (raw_position[0], raw_position[2])
+
             self.inputSeq.append(position)
+            kb = self.keyboard
 
             for ks in kb.scope.values():
                 if ks.contains(kb.getRelCoordinate(position)):

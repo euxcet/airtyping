@@ -1,6 +1,4 @@
 import math
-
-
 class Key():
     '''
       ---- up
