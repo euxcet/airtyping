@@ -40,7 +40,6 @@ def main():
 
     parser = Parser()
     parser.run()
-
     #Keep this process running until Enter is pressed
     print "Press Enter to quit..."
     try:
