@@ -4,8 +4,7 @@ from leap import Leap
 from listener import Listener
 from gesture import *
 from gestureseq import *
-from parser import *
-
+from inputparser import *
 from tkinter import *
 
 def main():

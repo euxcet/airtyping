@@ -16,7 +16,7 @@ class Key():
         self.center_y = top + height * 0.5
         self.center = (self.center_x, self.center_y)
         self.charcter = char
-    def contains(self.pos):
+    def contains(self, pos):
         return self.left <= pos[0] < self.right and self.top <= pos[1] < self.bottom
 
 
@@ -41,7 +41,7 @@ class Keyboard():
         self.top_most = -100.0
         self.bottom_most = 150.0
 
-        self.keyboard_width = sellf.right_most - self.left_most
+        self.keyboard_width = self.right_most - self.left_most
         self.keyboard_height = self.bottom_most - self.top_most
         self.key_width = self.keyboard_width / 10
         self.key_height = self.keyboard_height / 3
@@ -61,9 +61,9 @@ class Keyboard():
             self.scope[self.upKeys[i]] = Key(i, 0.0, 1.0, 1.0, self.upKeys[i])
         offset = 1.0 / 3
         for i in xrange(0, 9):
-            self.scope[self.midKeys[i]] = Key(i + offset, 1.0, 1.0, 1.0, self.downKeys[i])
+            self.scope[self.midKeys[i]] = Key(i + offset, 1.0, 1.0, 1.0, self.midKeys[i])
         for i in xrange(0, 7):
-            self.scope[self.downKeys[i]] = Key(i + offset, 2.0 , 1.0, 1.0, self.downKeys[i])
+            self.scope[self.downKeys[i]] = Key(i + offset * 2, 2.0 , 1.0, 1.0, self.downKeys[i])
 
 
         '''
