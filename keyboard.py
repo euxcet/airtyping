@@ -16,6 +16,7 @@ class Key():
         self.center_y = top + height * 0.5
         self.center = (self.center_x, self.center_y)
         self.charcter = char
+
     def contains(self, pos):
         return self.left <= pos[0] < self.right and self.top <= pos[1] < self.bottom
 
@@ -88,7 +89,7 @@ class Keyboard():
         p0, p1: (x, y)
     '''
     def calc(self, p0, p1):
-        dis = ((p0[0] - p1[0]) * (p0[0] - p1[0]) + (p0[1] - p1[1]) * (p0[1] - p1[1])) / 10000
+        dis = ((p0[0] - p1[0]) * (p0[0] - p1[0]) + (p0[1] - p1[1]) * (p0[1] - p1[1])) * 3.5
         return math.exp(-1./2 * dis)
 
     '''

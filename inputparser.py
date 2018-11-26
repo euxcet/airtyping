@@ -7,8 +7,11 @@ from dictionary import *
 class Parser():
     def __init__(self):
         self.keyboard = Keyboard()
+        # self.inputSeq = [(-50, -50), (10, 10), (75, 0)]
         self.inputSeq = []
         self.dictionary = Dictionary('dict.txt')
+
+        # print self.findInDictionary()
 
     def deleteTail(self):
         if len(self.inputSeq) > 0:
@@ -21,13 +24,22 @@ class Parser():
         input = self.inputSeq
         kb = self.keyboard
 
+        '''
+        for position in input:
+            for ks in kb.scope.values():
+                if ks.contains(kb.getRelCoordinate(position)):
+                    print "You tap " + ks.charcter + "."
+                    print "x : " + str(ks.left) + " " + str(ks.right) + " y : " + str(ks.top) + " " + str(ks.bottom)
+                    break;
+        '''
+
         length = len(input)
         if length == 0:
             return "ERROR: There is no input."
 
         CONTENT = 0
         PROB = 1
-        candidates = [[entry[CONTENT], 100.0 * entry[PROB]] for entry in self.dictionary.entries if len(entry[CONTENT]) >= length]
+        candidates = [[entry[CONTENT], 1000.0 * entry[PROB]] for entry in self.dictionary.entries if len(entry[CONTENT]) >= length]
 
         for i in xrange(length):
             # absolute position
@@ -42,10 +54,11 @@ class Parser():
 
             def prob_too_small(entry):
                 return entry[PROB] < maxProb * 0.01
-            filter(prob_too_small, candidates)
+            #filter(prob_too_small, candidates)
 
         candidates.sort(key = lambda e: e[PROB], reverse = True)
-        return ' '.join([entry[CONTENT] for entry in candidates[:5]])
+        return json.dumps(candidates[:5])
+        #return ' '.join([entry[CONTENT] for entry in candidates[:5]])
 
     def parse(self, gesture):
         print gesture.GESTURE_TYPE

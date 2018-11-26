@@ -38,6 +38,7 @@ def main():
     listener = Listener()
     controller.add_listener(listener)
 
+
     parser = Parser()
     parser.run()
     #Keep this process running until Enter is pressed
