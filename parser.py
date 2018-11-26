@@ -8,7 +8,7 @@ class Parser():
     def __init__(self):
         self.keyboard = Keyboard()
         self.inputSeq = []
-        self.dictionary = Dictionary()
+        self.dictionary = Dictionary('dict.txt')
 
 
     def deleteTail(self):
