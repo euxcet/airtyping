@@ -27,7 +27,7 @@ class Parser():
 
         CONTENT = 0
         PROB = 1
-        candidates = [(entry[CONTENT], 100.0 * entry[PROB]) for entry in self.dictionary.entries if len(entry[CONTENT]) >= length]
+        candidates = [[entry[CONTENT], 100.0 * entry[PROB]] for entry in self.dictionary.entries if len(entry[CONTENT]) >= length]
 
         for i in xrange(length):
             # absolute position
