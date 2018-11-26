@@ -1,0 +1,12 @@
+qwertyuiop
+asdfghjkl
+ zxcvbnm
+
+width: -150 ~ 220
+    up: -150 ~ 220 / 10
+    mid: -150 ~ 220 / 9
+    down -150 ~ 220 / 7
+height: -100 ~ 150
+    up:   -100 ~ -15
+    mid:   -15 ~ 70
+    down:   70 ~ 150
