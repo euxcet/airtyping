@@ -12,34 +12,30 @@ def singleton(cls, *args, **kw):
 class GestureSeq():
     def __init__(self):
         self.seq = Queue.Queue()
-        self.lastGesture = None
+        self.history = []
 
-    def empty():
+    def empty(self):
         return self.seq.empty()
 
-    def full():
+    def full(self):
         return self.seq.full()
 
-    def size():
+    def size(self):
         return self.seq.qsize()
 
+    def validate(self, gesture):
+        if (len(self.history) == 0):
+            return True
+        for g in self.history:
+            gap = gesture.timestamp - g.timestamp
+            if (g.conflict(gesture) and gap < 0.25):
+                return False
+        return True
 
     def insertGesture(self, gesture):
-        if (self.lastGesture != None):
-            last = self.lastGesture
-            if (gesture.GESTURE_TYPE == last.GESTURE_TYPE):
-                gap = gesture.timestamp - last.timestamp
-                if (gap < 0):
-                    print "Warning: new gesture's timestamp is too small."
-                if (gesture.GESTURE_TYPE == "SWIPE" and gap < 0.5):
-                    return
-                if (gesture.GESTURE_TYPE == "KEYTAP" and gap < 0.25):
-                    return
-
-        print "Insert gesture: ", gesture
-
-        self.seq.put(gesture)
-        self.lastGesture = gesture
+        if (self.validate(gesture)):
+            self.seq.put(gesture)
+            self.history.append(gesture)
 
     def getGesture(self):
         if (self.seq.empty()):

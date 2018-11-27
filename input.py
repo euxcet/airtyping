@@ -13,7 +13,7 @@ def main():
 
     # Enable swipe gesture
     controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)
-    controller.config.set("Gesture.Swipe.MinLength", 50.0)
+    controller.config.set("Gesture.Swipe.MinLength", 40.0)
     controller.config.set("Gesture.Swipe.MinVelocity", 40)
     controller.config.save()
 
