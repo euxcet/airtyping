@@ -12,7 +12,33 @@ class Handler():
     def __init__(self):
         self.lastSwipeStart = dict()
 
-    def detectSwipe(self, swipe):
+    # swipe left hand to the left
+    def detectDeleteWord(self, swipe):
+        # only accept swiping lefthand
+        hand = swipe.pointable.hand
+        finger = swipe.pointable.id
+        start = swipe.start_position
+        startDict = self.lastSwipeStart
+
+        # refuse: only one hand available
+        if (self.lefthand == self.righthand):
+            return
+
+        # refuse: swipe right hand
+        if (hand != self.lefthand):
+            return
+
+        # refuse: swipe left hand to the right
+        if (swipe.position[0] - swipe.start_position[0] > -120):
+            return
+
+        if (not (finger in startDict) or startDict[finger] != start):
+            startDict[finger] = start
+            GestureSeq().insertGesture(DeleteWordGesture(time.time()))
+
+
+    # swipe right hand to the left
+    def detectDeleteLetter(self, swipe):
         # only accept swiping righthand
         hand = swipe.pointable.hand
         finger = swipe.pointable.id
@@ -24,12 +50,32 @@ class Handler():
             return
 
         # refuse: swipe right hand to the right
-        if (swipe.position[0] - swipe.start_position[0] > -150):
+        if (swipe.position[0] - swipe.start_position[0] > -120):
             return
 
         if (not (finger in startDict) or startDict[finger] != start):
             startDict[finger] = start
-            GestureSeq().insertGesture(SwipeGesture(time.time()))
+            GestureSeq().insertGesture(DeleteLetterGesture(time.time()))
+
+
+    # swipe right hand to the right
+    def detectConfirm(self, swipe):
+        hand = swipe.pointable.hand
+        finger = swipe.pointable.id
+        start = swipe.start_position
+        startDict = self.lastSwipeStart
+
+        # refuse: swipe left hand
+        if (hand != self.righthand):
+            return
+
+        # refuse: swipe right hand to the left
+        if (swipe.position[0] - swipe.start_position[0] < 120):
+            return
+
+        if (not (finger in startDict) or startDict[finger] != start):
+            startDict[finger] = start
+            GestureSeq().insertGesture(ConfirmGesture(time.time()))
 
     def detectKeyTap(self, keytap):
         hand = keytap.pointable.hand
@@ -43,9 +89,6 @@ class Handler():
             return
 
         if (not (finger in startDict) or startDict[finger] != start):
-            #print keytap.position
-            #print keytap.start_position
-            #print
             startDict[finger] = start
             GestureSeq().insertGesture(KeyTapGesture(hand.palm_position, time.time()))
 
@@ -66,9 +109,7 @@ class Handler():
 
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
-                self.detectSwipe(Leap.SwipeGesture(gesture))
+                self.detectDeleteLetter(Leap.SwipeGesture(gesture))
+                self.detectDeleteWord(Leap.SwipeGesture(gesture))
+                self.detectConfirm(Leap.SwipeGesture(gesture))
                 self.detectKeyTap(Leap.SwipeGesture(gesture))
-            #if gesture.type is Leap.Gesture.TYPE_KEY_TAP:
-                #self.detectKeyTap(Leap.KeyTapGesture(gesture))
-            #if gesture.type is Leap.Gesture.TYPE_SCREEN_TAP:
-                #self.detectScreenTap(Leap.ScreenTapGesture(gesture))
