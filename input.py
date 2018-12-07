@@ -17,24 +17,6 @@ def main():
     controller.config.set("Gesture.Swipe.MinVelocity", 40)
     controller.config.save()
 
-    # Enable key tap gesture
-    '''
-    controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP)
-    controller.config.set("Gesture.KeyTap.MinDownVelocity", 10)
-    controller.config.set("Gesture.KeyTap.HistorySeconds", .1)
-    controller.config.set("Gesture.KeyTap.MinDistance", 1.0)
-    controller.config.save()
-    '''
-
-    # Enable screen tap gesture
-    '''
-    controller.enable_gesture(Leap.Gesture.TYPE_SCREEN_TAP)
-    controller.config.set("Gesture.ScreenTap.MinForwardVelocity", 1.0)
-    controller.config.set("Gesture.ScreenTap.HistorySeconds", .5)
-    controller.config.set("Gesture.ScreenTap.MinDistance", 0.1)
-    controller.config.save()
-    '''
-
     listener = Listener()
     controller.add_listener(listener)
 

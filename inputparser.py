@@ -2,6 +2,7 @@ from keyboard import *
 from gesture import *
 from gestureseq import *
 from dictionary import *
+from clicker import *
 
 class Parser():
     def __init__(self):
