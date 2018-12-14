@@ -11,6 +11,8 @@ from gestureseq import *
 class Handler():
     def __init__(self):
         self.lastSwipeStart = dict()
+        self.fistValidL = True
+        self.fistValidR = True
 
     # swipe left hand to the left
     def detectDeleteWord(self, swipe):
@@ -101,15 +103,48 @@ class Handler():
         print ""
 
 
+    def detectMakeAFist(self, hand, lr):
+        s = 0
+        for i in xrange(0, 5):
+            s = s + hand.palm_position.distance_to(hand.fingers[i].tip_position)
+
+        for i in xrange(0, 5):
+            for j in xrange(i + 1, 5):
+                s = s + hand.fingers[j].tip_position.distance_to(hand.fingers[i].tip_position)
+
+        if (s < 800 and hand.sphere_radius < 70):
+            if (lr == 0):
+                if (self.fistValidL == True):
+                    print "left hand make a fist"
+                    GestureSeq().insertGesture(SelectNextGesture(time.time()))
+                self.fistValidL = False
+            else:
+                if (self.fistValidR == True):
+                    print "right hand make a fist"
+                    GestureSeq().insertGesture(ConfirmGesture(time.time()))
+                    #GestureSeq().insertGesture(SelectNextGesture(time.time()))
+                self.fistValidR = False
+
+        if (s > 900):
+            if (lr == 0):
+                self.fistValidL = True
+            else:
+                self.fistValidR = True
+
+
     def handle(self, controller):
         frame = controller.frame()
         hands = frame.hands
         self.lefthand = hands.leftmost
         self.righthand = hands.rightmost
 
+        if (len(hands) == 2):
+            self.detectMakeAFist(self.lefthand, 0)
+            self.detectMakeAFist(self.righthand, 1)
+
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
                 self.detectDeleteLetter(Leap.SwipeGesture(gesture))
                 self.detectDeleteWord(Leap.SwipeGesture(gesture))
-                self.detectConfirm(Leap.SwipeGesture(gesture))
+                #self.detectConfirm(Leap.SwipeGesture(gesture))
                 self.detectKeyTap(Leap.SwipeGesture(gesture))

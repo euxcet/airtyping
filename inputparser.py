@@ -4,6 +4,7 @@ from gestureseq import *
 from dictionary import *
 from math import log
 from clicker import *
+import os
 
 class Parser():
     def __init__(self):
@@ -14,12 +15,16 @@ class Parser():
         self.dictionary = Dictionary('dict.txt')
 
         self.clicker = Clicker()
+        self.select = 0
+        self.punctuation = [',', '.', "Enter", '?', '!', '\"', '-', '\'']
 
         # print self.findInDictionary()
 
     def deleteLetter(self):
         if len(self.inputSeq) > 0:
             self.inputSeq.pop()
+        else:
+            self.clicker.delete()
         '''
             print "Input Sequence Length: " + str(len(seq))
         else:
@@ -86,34 +91,60 @@ class Parser():
 
         candidates.sort(cmp)
         return candidates
-        #return ' '.join([entry[CONTENT] for entry in candidates[:5]])
 
     def parse(self, gesture):
         #print gesture.GESTURE_TYPE
+
         if gesture.GESTURE_TYPE == "DELETELETTER":
+            self.select = 0
             self.deleteLetter()
 
         elif gesture.GESTURE_TYPE == "DELETEWORD":
+            self.select = 0
             self.deleteWord()
 
         elif gesture.GESTURE_TYPE == "CONFIRM":
             if len(self.inputSeq) > 0:
-                word = self.findInDictionary()[0][0]
+                word = self.findInDictionary()[self.select][0]
                 self.input.append(word)
                 self.clicker.input(word + " ")
                 self.inputSeq = []
+                self.select = 0
+            elif (self.select < len(self.punctuation)):
+                punc = self.punctuation[self.select]
+                if (punc == "Enter"):
+                    self.clicker.newline()
+                else:
+                    self.clicker.delete()
+                    self.clicker.input(punc)
+
+                self.select = 0
+            else:
+                self.select = 0
+
 
         elif gesture.GESTURE_TYPE == "KEYTAP":
-            raw_position = gesture.position
-            position = (raw_position[0], raw_position[2])
+            if (self.select > 0):
+                self.select = 0
+            else:
+                raw_position = gesture.position
+                position = (raw_position[0], raw_position[2])
 
-            self.inputSeq.append(position)
-            kb = self.keyboard
-            self.findInDictionary()
+                self.inputSeq.append(position)
+                kb = self.keyboard
+                self.findInDictionary()
+
+        elif gesture.GESTURE_TYPE == "SELECTNEXT":
+            self.select += 1
+
+        elif gesture.GESTURE_TYPE == "SELECTPREV":
+            if (self.select > 0):
+                self.select -= 1
 
         self.printInput()
 
     def printInput(self):
+        os.system('clear')
         print "Inputed:  ",
         for word in self.input:
             print word,
@@ -124,8 +155,18 @@ class Parser():
         if (len(self.inputSeq) > 0):
             words = self.findInDictionary()
             for i in xrange(0, 20):
-                print ("%d:" % i) + words[i][0] + " " + ("%.4f: " % words[i][1]) + "   ",
+                if (i == self.select):
+                    print '\033[31m' + ("%d:" % i) + words[i][0] + "   " + '\033[0m',
+                    #print '\033[31m' + ("%d:" % i) + words[i][0] + " " + ("%.4f: " % words[i][1]) + "   " + '\033[0m',
+                else:
+                    print ("%d:" % i) + words[i][0] + "   ",
+                    #print ("%d:" % i) + words[i][0] + " " + ("%.4f: " % words[i][1]) + "   ",
         else:
+            for i in xrange(0, len(self.punctuation)):
+                if (i == self.select):
+                    print '\033[31m' + ("%d:" % i) + self.punctuation[i] + "   " + '\033[0m',
+                else:
+                    print ("%d:" % i) + self.punctuation[i] + "   ",
             print
 
         print

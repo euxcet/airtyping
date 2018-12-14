@@ -58,3 +58,19 @@ class ConfirmGesture(Gesture):
         if (gesture.GESTURE_TYPE == "DELETELETTER"):
             return 2.0
         return 0.0
+
+class SelectNextGesture(Gesture):
+    def __init__(self, timestamp):
+        self.GESTURE_TYPE = "SELECTNEXT"
+        self.timestamp = timestamp
+
+    def __str__(self):
+        return "<SelectNext Gesture> timestamp: %.5f" % self.timestamp
+
+class SelectPrevGesture(Gesture):
+    def __init__(self, timestamp):
+        self.GESTURE_TYPE = "SELECTPREV"
+        self.timestamp = timestamp
+
+    def __str__(self):
+        return "<SelectPrev Gesture> timestamp: %.5f" % self.timestamp

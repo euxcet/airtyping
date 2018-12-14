@@ -9,3 +9,6 @@ class Clicker():
 
 	def delete(self, l = 1):
 		self.keyboard.tap_key('delete', n = l)
+
+	def newline(self):
+		self.keyboard.tap_key('return')
