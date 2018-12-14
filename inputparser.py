@@ -59,21 +59,32 @@ class Parser():
 
         for i in xrange(length):
             # absolute position
-            maxProb = -100000
             if i == 0:
                 for cddt in candidates:
                     cddt[PROB] += kb.getAbsProb(input[0], cddt[CONTENT][0])
-                    maxProb = max(maxProb, cddt[PROB])
             else:
                 for cddt in candidates:
                     cddt[PROB] += kb.getRelProb(input[i], input[i - 1], cddt[CONTENT][i], cddt[CONTENT][i - 1])
-                    maxProb = max(maxProb, cddt[PROB])
 
-            def prob_too_small(entry):
-                return entry[PROB] < maxProb * 4
-            filter(prob_too_small, candidates)
+        for cddt in candidates:
+            cddt[PROB] += -log(len(cddt[CONTENT]))
 
-        candidates.sort(key = lambda e: e[PROB], reverse = True)
+        # def prob_too_small(entry):
+        #     return entry[PROB] < maxProb - 100000
+        #filter(prob_too_small, candidates)
+
+        def cmp(a, b):
+            if a[PROB] > b[PROB]:
+                return -1
+            if a[PROB] < b[PROB]:
+                return 1
+            if len(a[CONTENT]) < len(b[CONTENT]):
+                return -1
+            if len(a[CONTENT]) > len(b[CONTENT]):
+                return 1
+            return -1
+
+        candidates.sort(cmp)
         return candidates
         #return ' '.join([entry[CONTENT] for entry in candidates[:5]])
 
