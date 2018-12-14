@@ -2,6 +2,7 @@ from keyboard import *
 from gesture import *
 from gestureseq import *
 from dictionary import *
+from math import log
 
 class Parser():
     def __init__(self):
@@ -49,21 +50,22 @@ class Parser():
 
         CONTENT = 0
         PROB = 1
-        candidates = [[entry[CONTENT], 1000.0 * entry[PROB]] for entry in self.dictionary.entries if len(entry[CONTENT]) >= length]
+        candidates = [[entry[CONTENT], log(entry[PROB])] for entry in self.dictionary.entries if len(entry[CONTENT]) >= length]
 
         for i in xrange(length):
             # absolute position
-            maxProb = 0.0
+            maxProb = -100000
             if i == 0:
                 for cddt in candidates:
-                    cddt[PROB] *= kb.getAbsProb(input[0], cddt[CONTENT][0])
+                    cddt[PROB] += kb.getAbsProb(input[0], cddt[CONTENT][0])
                     maxProb = max(maxProb, cddt[PROB])
             else:
                 for cddt in candidates:
-                    cddt[PROB] *= kb.getRelProb(input[i], input[i - 1], cddt[CONTENT][i], cddt[CONTENT][i - 1])
+                    cddt[PROB] += kb.getRelProb(input[i], input[i - 1], cddt[CONTENT][i], cddt[CONTENT][i - 1])
+                    maxProb = max(maxProb, cddt[PROB])
 
             def prob_too_small(entry):
-                return entry[PROB] < maxProb * 0.01
+                return entry[PROB] < maxProb - 100000
             #filter(prob_too_small, candidates)
 
         candidates.sort(key = lambda e: e[PROB], reverse = True)
