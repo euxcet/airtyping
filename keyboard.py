@@ -85,24 +85,19 @@ class Keyboard():
     def getAbsCoordinate(self, pos):
         return (self.left_most + pos[0] * self.key_width, self.top_most + pos[1] * self.key_height)
 
-    '''
-        p0, p1: (x, y)
-    '''
-    def calc(self, p0, p1):
-        dis = ((p0[0] - p1[0]) * (p0[0] - p1[0]) + (p0[1] - p1[1]) * (p0[1] - p1[1])) * 3.5
-        return math.exp(-1./2 * dis)
 
-    '''
-        position: (x, y)
-        char: chr
-    '''
-
+    def logGauss(x, mu, sigma):
+        sigma2 = sigma * sigma
+        return -0.5 * math.log(2 * math.pi * sigma2) - (x - mu) * (x - mu) / 2 / sigma2
     def getAbsProb(self, position, char):
-        return self.calc(self.getRelCoordinate(position), self.scope[char].center)
+        expectedPoint = self.scope[char].center
+        actualPoint = self.getRelCoordinate(position)
+        return logGauss(actualPoint[0], expectedPoint[0], 5.0 / 3) + logGauss(actualPoint[1], expectedPoint[1], 0.5)
 
     def getRelProb(self, cur_pos, last_pos, cur_char, last_char):
         def sub(p1, p0):
             return (p1[0] - p0[0], p1[1] - p0[1])
+        expectedShift = sub(self.scope[cur_char].center, self.scope[last_char].center)
+        actualShift = sub(self.getRelCoordinate(cur_pos), self.getRelCoordinate(last_pos))
 
-        return self.calc(sub(self.getRelCoordinate(cur_pos), self.getRelCoordinate(last_pos)),\
-                sub(self.scope[cur_char].center, self.scope[last_char].center))
+        return logGauss(actualShift[0], expectedShift[0], 5.0 / 3) + logGauss(actualShift[1], expectedShift[1], 0.5)
