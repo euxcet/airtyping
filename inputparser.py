@@ -13,6 +13,8 @@ class Parser():
         self.inputSeq = []
         self.dictionary = Dictionary('dict.txt')
 
+        self.clicker = Clicker()
+
         # print self.findInDictionary()
 
     def deleteLetter(self):
@@ -28,6 +30,8 @@ class Parser():
         if len(self.inputSeq) > 0:
             self.inputSeq = []
         elif len(self.input) > 0:
+            l = len(self.input[len(self.input) - 1])
+            self.clicker.delete(l + 1)
             self.input.pop()
         #print "Input Sequence Length: " + str(len(seq))
 
@@ -94,7 +98,9 @@ class Parser():
 
         elif gesture.GESTURE_TYPE == "CONFIRM":
             if len(self.inputSeq) > 0:
-                self.input.append(self.findInDictionary()[0][0])
+                word = self.findInDictionary()[0][0]
+                self.input.append(word)
+                self.clicker.input(word + " ")
                 self.inputSeq = []
 
         elif gesture.GESTURE_TYPE == "KEYTAP":
@@ -103,17 +109,8 @@ class Parser():
 
             self.inputSeq.append(position)
             kb = self.keyboard
-
-
-            '''
-            for ks in kb.scope.values():
-                if ks.contains(kb.getRelCoordinate(position)):
-                    print "You tap " + ks.charcter + "."
-                    break;
-            '''
-
             self.findInDictionary()
-            #print self.findInDictionary()
+
         self.printInput()
 
     def printInput(self):
@@ -125,7 +122,9 @@ class Parser():
 
         print "Inputing: ",
         if (len(self.inputSeq) > 0):
-            print self.findInDictionary()[0][0]
+            words = self.findInDictionary()
+            for i in xrange(0, 20):
+                print ("%d:" % i) + words[i][0] + " " + ("%.4f: " % words[i][1]) + "   ",
         else:
             print
 

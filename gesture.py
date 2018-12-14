@@ -9,8 +9,8 @@ class Gesture():
 
     def conflict(self, gesture):
         if (gesture.GESTURE_TYPE == self.GESTURE_TYPE):
-            return True
-        return False
+            return 0.25
+        return 0.0
 
 class DeleteLetterGesture(Gesture):
     def __init__(self, timestamp):
@@ -22,10 +22,10 @@ class DeleteLetterGesture(Gesture):
 
     def conflict(self, gesture):
         if (gesture.GESTURE_TYPE == self.GESTURE_TYPE):
-            return True
+            return 0.25
         if (gesture.GESTURE_TYPE == "CONFIRM"):
-            return True
-        return False
+            return 2.0
+        return 0.0
 
 class DeleteWordGesture(Gesture):
     def __init__(self, timestamp):
@@ -54,7 +54,7 @@ class ConfirmGesture(Gesture):
 
     def conflict(self, gesture):
         if (gesture.GESTURE_TYPE == self.GESTURE_TYPE):
-            return True
+            return 0.25
         if (gesture.GESTURE_TYPE == "DELETELETTER"):
-            return True
-        return False
+            return 2.0
+        return 0.0

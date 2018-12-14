@@ -28,7 +28,7 @@ class GestureSeq():
             return True
         for g in self.history:
             gap = gesture.timestamp - g.timestamp
-            if (g.conflict(gesture) and gap < 0.25):
+            if (gap < g.conflict(gesture)):
                 return False
         return True
 

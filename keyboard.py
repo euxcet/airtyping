@@ -1,4 +1,7 @@
 import math
+def logGauss(x, mu, sigma):
+    sigma2 = sigma * sigma
+    return -0.5 * math.log(2 * math.pi * sigma2) - (x - mu) * (x - mu) / 2 / sigma2
 class Key():
     '''
       ---- up
@@ -86,9 +89,7 @@ class Keyboard():
         return (self.left_most + pos[0] * self.key_width, self.top_most + pos[1] * self.key_height)
 
 
-    def logGauss(x, mu, sigma):
-        sigma2 = sigma * sigma
-        return -0.5 * math.log(2 * math.pi * sigma2) - (x - mu) * (x - mu) / 2 / sigma2
+
     def getAbsProb(self, position, char):
         expectedPoint = self.scope[char].center
         actualPoint = self.getRelCoordinate(position)
