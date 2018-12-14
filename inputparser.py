@@ -3,6 +3,7 @@ from gesture import *
 from gestureseq import *
 from dictionary import *
 from math import log
+from clicker import *
 
 class Parser():
     def __init__(self):
