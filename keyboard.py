@@ -25,7 +25,7 @@ class Key():
 
 
 class Keyboard():
-    def __init__(self):
+    def __init__(self, left_most, right_most, top_most, bottom_most):
         '''
         width: -150 ~ 220
             up: -150 ~ 220 / 10
@@ -40,10 +40,16 @@ class Keyboard():
         x: -150 ~ 220
         y: -100 ~ 150
         '''
+        '''
         self.left_most = -150.0
         self.right_most = 220.0
         self.top_most = -100.0
         self.bottom_most = 150.0
+        '''
+        self.left_most = left_most
+        self.right_most = right_most
+        self.top_most = top_most
+        self.bottom_most = bottom_most
 
         self.keyboard_width = self.right_most - self.left_most
         self.keyboard_height = self.bottom_most - self.top_most

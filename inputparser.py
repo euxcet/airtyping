@@ -7,9 +7,8 @@ from clicker import *
 import os
 
 class Parser():
-    def __init__(self):
-        self.keyboard = Keyboard()
-        # self.inputSeq = [(-50, -50), (10, 10), (75, 0)]
+    def __init__(self, keyboard):
+        self.keyboard = keyboard
         self.input = []
         self.inputSeq = []
         self.dictionary = Dictionary('dict.txt')

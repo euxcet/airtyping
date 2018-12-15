@@ -34,8 +34,8 @@ class GestureSeq():
 
     def insertGesture(self, gesture):
         if (self.validate(gesture)):
-            self.seq.put(gesture)
             self.history.append(gesture)
+            self.seq.put(gesture)
 
     def getGesture(self):
         if (self.seq.empty()):

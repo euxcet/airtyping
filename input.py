@@ -6,6 +6,7 @@ from gesture import *
 from gestureseq import *
 from inputparser import *
 from tkinter import *
+from registration import *
 
 def main():
 
@@ -20,8 +21,8 @@ def main():
     listener = Listener()
     controller.add_listener(listener)
 
-
-    parser = Parser()
+    keyboard = Registration().register()
+    parser = Parser(keyboard)
     parser.run()
     #Keep this process running until Enter is pressed
     print "Press Enter to quit..."

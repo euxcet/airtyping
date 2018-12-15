@@ -13,6 +13,7 @@ class Handler():
         self.lastSwipeStart = dict()
         self.fistValidL = True
         self.fistValidR = True
+        self.fingerY = [[[], [], [], [], []],  [[], [], [], [], []] ]
 
     # swipe left hand to the left
     def detectDeleteWord(self, swipe):
@@ -131,6 +132,34 @@ class Handler():
             else:
                 self.fistValidR = True
 
+    def detectFingerTap(self, hand, lr):
+        fingers = hand.fingers
+        fingerY = self.fingerY
+        for i in xrange(0, 5):
+            Y = fingerY[lr][i]
+            l = len(Y)
+            finger = fingers[i]
+            curY = finger.tip_position[1]
+
+            if (l == 15):
+                s = 0
+                for j in xrange(0, l):
+                    s = max(s, Y[j] - curY)
+
+                if (s > 35):
+                    if (i == 0 and lr == 0):
+                        GestureSeq().insertGesture(ConfirmGesture(time.time()))
+                    elif (i == 0 and lr == 1):
+                        GestureSeq().insertGesture(SelectNextGesture(time.time()))
+                    else:
+                        GestureSeq().insertGesture(KeyTapGesture(finger.tip_position, time.time(), lr * 5 + i + 1))
+
+            if (l < 15):
+                Y.append(curY)
+            else:
+                for j in xrange(0, l - 1):
+                    Y[j] = Y[j + 1]
+                Y[l - 1] = curY
 
     def handle(self, controller):
         frame = controller.frame()
@@ -139,12 +168,15 @@ class Handler():
         self.righthand = hands.rightmost
 
         if (len(hands) == 2):
-            self.detectMakeAFist(self.lefthand, 0)
-            self.detectMakeAFist(self.righthand, 1)
+            #self.detectMakeAFist(self.lefthand, 0)
+            #self.detectMakeAFist(self.righthand, 1)
+            self.detectFingerTap(self.lefthand, 0)
+            self.detectFingerTap(self.righthand, 1)
 
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
-                self.detectDeleteLetter(Leap.SwipeGesture(gesture))
-                self.detectDeleteWord(Leap.SwipeGesture(gesture))
+                pass
+                #self.detectDeleteLetter(Leap.SwipeGesture(gesture))
+                #self.detectDeleteWord(Leap.SwipeGesture(gesture))
                 #self.detectConfirm(Leap.SwipeGesture(gesture))
-                self.detectKeyTap(Leap.SwipeGesture(gesture))
+                #self.detectKeyTap(Leap.SwipeGesture(gesture))

@@ -5,7 +5,7 @@ class Gesture():
         self.GESTURE_TYPE = "ANY"
 
     def __str__(self):
-        return "Gesture"
+        return "<Gesture>"
 
     def conflict(self, gesture):
         if (gesture.GESTURE_TYPE == self.GESTURE_TYPE):
@@ -33,16 +33,17 @@ class DeleteWordGesture(Gesture):
         self.timestamp = timestamp
 
     def __str__(self):
-        return "<DeleteWord Gesture> timestamp: %0.5f" % self.timestamp
+        return "<DeleteWord Gesture> timestamp: %0.5f kind: %d" % self.timestamp
 
 class KeyTapGesture(Gesture):
-    def __init__(self, position, timestamp):
+    def __init__(self, position, timestamp, kind):
         self.GESTURE_TYPE = "KEYTAP"
         self.position = position
+        self.kind = kind
         self.timestamp = timestamp
 
     def __str__(self):
-        return "<KeyTap Gesture> timestamp: %.5f position: (%.4f, %.4f)" % (self.timestamp , self.position[0], self.position[2])
+        return "<KeyTap Gesture> timestamp: %.5f position: (%.4f, %.4f) kind: %d" % (self.timestamp , self.position[0], self.position[2], self.kind)
 
 class ConfirmGesture(Gesture):
     def __init__(self, timestamp):
