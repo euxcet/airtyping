@@ -4,7 +4,7 @@ from gestureseq import *
 from dictionary import *
 from math import log
 from clicker import *
-import os
+import os, sys
 
 class Parser():
     def __init__(self, keyboard):
@@ -143,7 +143,10 @@ class Parser():
         self.printInput()
 
     def printInput(self):
-        os.system('clear')
+        if (sys.platform == "darwin"):
+            os.system('clear')
+        elif (sys.platform == "win32"):
+            os.system('cls')
         print "Inputed:  ",
         for word in self.input:
             print word,

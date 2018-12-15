@@ -1,4 +1,5 @@
 from pykeyboard import PyKeyboard
+import sys
 
 class Clicker():
 	def __init__(self):
@@ -8,7 +9,13 @@ class Clicker():
 		self.keyboard.type_string(s)
 
 	def delete(self, l = 1):
-		self.keyboard.tap_key('delete', n = l)
+		if (sys.platform == "darwin"):
+			self.keyboard.tap_key('delete', n = l)
+		elif (sys.platform == "win32"):
+			self.keyboard.tap_key(self.keyboard.backspace_key, n = l)
 
 	def newline(self):
-		self.keyboard.tap_key('return')
+		if (sys.platform == "darwin"):
+			self.keyboard.tap_key('return')
+		elif (sys.platform == "win32"):
+			self.keyboard.tap_key(self.keyboard.return_key)
