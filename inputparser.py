@@ -11,7 +11,7 @@ class Parser():
         self.keyboard = keyboard
         self.input = []
         self.inputSeq = []
-        self.dictionary = Dictionary('dict.txt')
+        self.dictionary = Dictionary('dict_bylength.txt')
 
         self.clicker = Clicker()
         self.select = 0
@@ -59,7 +59,7 @@ class Parser():
 
         CONTENT = 0
         PROB = 1
-        candidates = [[entry[CONTENT], log(entry[PROB])] for entry in self.dictionary.entries if len(entry[CONTENT]) >= length]
+        candidates = [[entry[CONTENT], log(entry[PROB])] for entry in self.dictionary.entries[length]]
 
         for i in xrange(length):
             # absolute position
@@ -70,8 +70,6 @@ class Parser():
                 for cddt in candidates:
                     cddt[PROB] += kb.getRelProb(input[i], input[i - 1], cddt[CONTENT][i], cddt[CONTENT][i - 1])
 
-        for cddt in candidates:
-            cddt[PROB] += -log(len(cddt[CONTENT]))
 
         # def prob_too_small(entry):
         #     return entry[PROB] < maxProb - 100000
@@ -156,7 +154,7 @@ class Parser():
         print "Inputing: ",
         if (len(self.inputSeq) > 0):
             words = self.findInDictionary()
-            for i in xrange(0, 20):
+            for i in xrange(0, len(words)):
                 if (i == self.select):
                     print '\033[31m' + ("%d:" % i) + words[i][0] + "   " + '\033[0m',
                     #print '\033[31m' + ("%d:" % i) + words[i][0] + " " + ("%.4f: " % words[i][1]) + "   " + '\033[0m',

@@ -14,6 +14,8 @@ class Handler():
         self.fistValidL = True
         self.fistValidR = True
         self.fingerY = [[[], [], [], [], []],  [[], [], [], [], []] ]
+        self.alpha = 0.45
+        self.fingerTapThreshold = [50, 59.3, 59.5, 54.2, 42.8]
 
     # swipe left hand to the left
     def detectDeleteWord(self, swipe):
@@ -135,18 +137,28 @@ class Handler():
     def detectFingerTap(self, hand, lr):
         fingers = hand.fingers
         fingerY = self.fingerY
+        palm_position = hand.palm_position
+        y_axis = hand.basis.y_basis
+        inverse_basis = hand.basis.rigid_inverse()
+        alpha = self.alpha
+        fingerTapThreshold = self.fingerTapThreshold
         for i in xrange(0, 5):
+            #print point
+            finger = fingers[i]
+            relativePosition = y_axis.dot(finger.tip_position - palm_position)
+            if(i == 1):
+                print relativePosition
+                return
+
             Y = fingerY[lr][i]
             l = len(Y)
-            finger = fingers[i]
-            curY = finger.tip_position[1]
+            # curY = finger.tip_position[1]
+            curY = relativePosition
 
-            if (l == 15):
-                s = 0
-                for j in xrange(0, l):
-                    s = max(s, Y[j] - curY)
+            if (l == 20):
+                s = max(0, max(Y) - curY)
 
-                if (s > 35):
+                if (s > alpha * fingerTapThreshold[i]):
                     if (i == 0 and lr == 0):
                         GestureSeq().insertGesture(ConfirmGesture(time.time()))
                     elif (i == 0 and lr == 1):
@@ -154,12 +166,13 @@ class Handler():
                     else:
                         GestureSeq().insertGesture(KeyTapGesture(finger.tip_position, time.time(), lr * 5 + i + 1))
 
-            if (l < 15):
+            if (l < 20):
                 Y.append(curY)
             else:
-                for j in xrange(0, l - 1):
-                    Y[j] = Y[j + 1]
-                Y[l - 1] = curY
+                Y = Y[1:] + [curY]
+                # for j in xrange(0, l - 1):
+                #     Y[j] = Y[j + 1]
+                # Y[l - 1] = curY
 
     def handle(self, controller):
         frame = controller.frame()
@@ -170,13 +183,13 @@ class Handler():
         if (len(hands) == 2):
             #self.detectMakeAFist(self.lefthand, 0)
             #self.detectMakeAFist(self.righthand, 1)
+            #print self.lefthand.basis, self.lefthand.palm_position
             self.detectFingerTap(self.lefthand, 0)
-            self.detectFingerTap(self.righthand, 1)
+            #self.detectFingerTap(self.righthand, 1)
 
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
-                pass
                 #self.detectDeleteLetter(Leap.SwipeGesture(gesture))
-                #self.detectDeleteWord(Leap.SwipeGesture(gesture))
+                self.detectDeleteWord(Leap.SwipeGesture(gesture))
                 #self.detectConfirm(Leap.SwipeGesture(gesture))
                 #self.detectKeyTap(Leap.SwipeGesture(gesture))
