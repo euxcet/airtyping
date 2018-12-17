@@ -154,7 +154,7 @@ class Parser():
         print "Inputing: ",
         if (len(self.inputSeq) > 0):
             words = self.findInDictionary()
-            for i in xrange(0, len(words)):
+            for i in xrange(0, min(20, len(words))):
                 if (i == self.select):
                     print '\033[31m' + ("%d:" % i) + words[i][0] + "   " + '\033[0m',
                     #print '\033[31m' + ("%d:" % i) + words[i][0] + " " + ("%.4f: " % words[i][1]) + "   " + '\033[0m',
