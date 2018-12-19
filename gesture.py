@@ -45,6 +45,14 @@ class KeyTapGesture(Gesture):
     def __str__(self):
         return "<KeyTap Gesture> timestamp: %.5f position: (%.4f, %.4f) kind: %d" % (self.timestamp , self.position[0], self.position[2], self.kind)
 
+    def conflict(self, gesture):
+        if (gesture.GESTURE_TYPE == self.GESTURE_TYPE):
+            if (gesture.kind == self.kind):
+                return 0.5
+            else:
+                return 0.25
+        return 0.0
+
 class ConfirmGesture(Gesture):
     def __init__(self, timestamp):
         self.GESTURE_TYPE = "CONFIRM"

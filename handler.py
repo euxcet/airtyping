@@ -3,6 +3,10 @@ import time
 from gesture import *
 from gestureseq import *
 import math
+
+from keras.models import load_model
+import numpy as np
+
 '''
     frame: hands
     hands: is_empty, frontmost, leftmost, rightmost
@@ -23,6 +27,12 @@ class Handler():
 
         for i in xrange(5):
             self.fingerTapThreshold[i] *= alpha[i]
+
+        self.left_model = load_model('recognizer/left_model.h5')
+        self.right_model = load_model('recognizer/right_model.h5')
+        self.left_model.predict(np.array([[1 for i in xrange(0, 18)]]))
+        self.right_model.predict(np.array([[1 for i in xrange(0, 18)]]))
+
 
         # 0.2
 
@@ -143,7 +153,7 @@ class Handler():
             else:
                 self.fistValidR = True
 
-    def detectFingerTap(self, hand, lr):
+    def detectFingerTap2(self, hand, lr):
         fingers = hand.fingers
         fingerY = self.fingerY
         palm_position = hand.palm_position
@@ -213,6 +223,33 @@ class Handler():
             print lr * 5 + tap_finger + 1
             #GestureSeq().insertGesture(KeyTapGesture(fingers[tap_finger].stabilized_tip_position, time.time(), lr * 5 + tap_finger + 1))
 
+    def detectFingerTap(self, hand, lr):
+        palm = hand.palm_position
+        data = [palm[0], palm[1], palm[2]]
+
+        fingers = hand.fingers
+        for finger in fingers:
+            tip = finger.stabilized_tip_position
+            data = data + [tip[0], tip[1], tip[2]]
+
+        x_test = np.array([data]) / 100
+
+        classes = self.left_model.predict(x_test)
+        if (lr == 1):
+            classes = self.right_model.predict(x_test)
+
+        for c in classes:
+            value = 0
+            pos = -1
+            for j in xrange(0, 11):
+                if (c[j] > value):
+                    value = c[j]
+                    pos = j
+            if (pos != 10 and value > 0.90):
+                GestureSeq().insertGesture(KeyTapGesture(fingers[pos - lr * 5].stabilized_tip_position, time.time(), pos + 1))
+
+
+
 
     def handle(self, controller):
         frame = controller.frame()
@@ -225,12 +262,11 @@ class Handler():
             #self.detectMakeAFist(self.righthand, 1)
             #print self.lefthand.basis, self.lefthand.palm_position
             self.detectFingerTap(self.lefthand, 0)
-            #self.detectFingerTap(self.righthand, 1)
+            self.detectFingerTap(self.righthand, 1)
 
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
-                pass
                 #self.detectDeleteLetter(Leap.SwipeGesture(gesture))
-                #self.detectDeleteWord(Leap.SwipeGesture(gesture))
+                self.detectDeleteWord(Leap.SwipeGesture(gesture))
                 #self.detectConfirm(Leap.SwipeGesture(gesture))
                 #self.detectKeyTap(Leap.SwipeGesture(gesture))
