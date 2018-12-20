@@ -33,7 +33,7 @@ class DeleteWordGesture(Gesture):
         self.timestamp = timestamp
 
     def __str__(self):
-        return "<DeleteWord Gesture> timestamp: %0.5f kind: %d" % self.timestamp
+        return "<DeleteWord Gesture> timestamp: %0.5f" % self.timestamp
 
 class KeyTapGesture(Gesture):
     def __init__(self, position, timestamp, kind):

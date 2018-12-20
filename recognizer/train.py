@@ -3,21 +3,35 @@ import keras
 from keras.layers import Dense
 from keras.models import *
 import numpy as np
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
+def log(hist):
+    plt.plot(hist.history['acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train'], loc='upper left')
+    plt.show()
+
+    plt.plot(hist.history['loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train'], loc='upper left')
+    plt.show()
 
 
 #model = load_model('model.h5')
 
 
 model = Sequential()
-model.add(Dense(units=64, activation='relu', input_dim=18))
+model.add(Dense(units=256, activation='relu', input_dim=78))
+model.add(Dense(units=64, activation='relu'))
 model.add(Dense(units=32, activation='relu'))
 model.add(Dense(units=11, activation='softmax'))
 
-model.compile(loss='categorical_crossentropy',
-              optimizer='sgd',
-              metrics=['accuracy'])
+adam = keras.optimizers.Adam(lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = None, decay = 0.0, amsgrad = False)
+model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
 
 f = open("data.out", "r")
@@ -61,7 +75,10 @@ y_test = keras.utils.to_categorical(y_test, num_classes = 11)
 print x_train.shape
 print y_train.shape
 
-model.fit(x_train, y_train, epochs=60, batch_size=4)
+history = model.fit(x_train, y_train, epochs=800, batch_size=16)
+
+log(history)
+
 model.save('model.h5')
 
 

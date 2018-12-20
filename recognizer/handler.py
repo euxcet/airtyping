@@ -24,4 +24,9 @@ class Handler():
             for finger in fingers:
                 tip = finger.stabilized_tip_position
                 data = data + [tip[0], tip[1], tip[2]]
+
+                for boneid in xrange(0, 4):
+                    bone = finger.bone(boneid)
+                    data = data + [bone.center[0], bone.center[1], bone.center[2]]
+
             DataSeq().setData(data)

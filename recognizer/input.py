@@ -11,6 +11,10 @@ def main():
     listener = Listener()
     controller.add_listener(listener)
 
+    print "Which finger do you want to record: ",
+    finger = int(raw_input())
+    print "Finger: ", finger
+
     f = open("test.out", "a")
     #Keep this process running until Enter is pressed
     tot = 0
@@ -25,7 +29,7 @@ def main():
         print >> f, len(data),
         for d in data:
             print >> f, d,
-        print >> f, 10
+        print >> f, finger
         if (tot == 100):
             break
     f.close()
