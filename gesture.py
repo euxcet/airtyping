@@ -48,9 +48,9 @@ class KeyTapGesture(Gesture):
     def conflict(self, gesture):
         if (gesture.GESTURE_TYPE == self.GESTURE_TYPE):
             if (gesture.kind == self.kind):
-                return 0.5
+                return 1.5
             else:
-                return 0.25
+                return 0.4
         return 0.0
 
 class ConfirmGesture(Gesture):

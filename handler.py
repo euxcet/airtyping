@@ -181,13 +181,19 @@ class Handler():
                 if (c[j] > value):
                     value = c[j]
                     pos = j
-            '''
-            for j in xrange(6, 11):
+            for j in xrange(0, 11):
                 print "%.3f " % c[j],
             print
+
             '''
-            if (pos != 10 and c[10] < 0.6 and value > 0.6):
-                GestureSeq().insertGesture(KeyTapGesture(fingers[pos - lr * 5].stabilized_tip_position, time.time(), pos + 1))
+            if (pos != 10 and c[10] < 0.6 and value > 0.8):
+                if(pos == 0):
+                    GestureSeq().insertGesture(ConfirmGesture(time.time()))
+                elif(pos == 5):
+                    GestureSeq().insertGesture(SelectNextGesture(time.time()))
+                else:
+                    GestureSeq().insertGesture(KeyTapGesture(fingers[pos - lr * 5].stabilized_tip_position, time.time(), pos + 1))
+            '''
 
 
 
@@ -203,7 +209,7 @@ class Handler():
             #self.detectMakeAFist(self.righthand, 1)
             #print self.lefthand.basis, self.lefthand.palm_position
             self.detectFingerTap(self.lefthand, 0)
-            self.detectFingerTap(self.righthand, 1)
+            #self.detectFingerTap(self.righthand, 1)
 
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:

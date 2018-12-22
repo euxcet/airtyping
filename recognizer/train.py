@@ -2,6 +2,7 @@ import keras
 #from keras.models import Sequential
 from keras.layers import Dense
 from keras.models import *
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -42,6 +43,8 @@ yy = []
 
 lines = f.readlines()
 
+random.shuffle(lines)
+
 for line in lines:
     data = map(lambda x: float(x), line.split(' '))
     data[0] = int(data[0])
@@ -52,14 +55,15 @@ f.close()
 
 ftest = open("test.out", "r")
 lines = ftest.readlines()
+
+random.shuffle(lines)
+
 for line in lines:
     data = map(lambda x: float(x), line.split(' '))
     data[0] = int(data[0])
     data[-1] = int(data[-1])
     xx.append(data[1:-1])
     yy.append(data[-1])
-
-
 
 x_train = np.array(x) / 100
 y_train = np.array(y)
@@ -75,7 +79,7 @@ y_test = keras.utils.to_categorical(y_test, num_classes = 11)
 print x_train.shape
 print y_train.shape
 
-history = model.fit(x_train, y_train, epochs=800, batch_size=16)
+history = model.fit(x_train, y_train, epochs=500, batch_size=16)
 
 log(history)
 
@@ -97,4 +101,3 @@ for c in classes:
             pos = j
     print pos
 '''
-
