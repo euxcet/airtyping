@@ -35,7 +35,7 @@ adam = keras.optimizers.Adam(lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon =
 model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
 
-f = open("data.out", "r")
+f = open("data_12_23.out", "r")
 x = []
 y = []
 xx = []
@@ -79,7 +79,7 @@ y_test = keras.utils.to_categorical(y_test, num_classes = 11)
 print x_train.shape
 print y_train.shape
 
-history = model.fit(x_train, y_train, epochs=500, batch_size=16)
+history = model.fit(x_train, y_train, epochs=500, batch_size=32)
 
 log(history)
 
