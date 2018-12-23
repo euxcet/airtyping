@@ -30,7 +30,7 @@ def main():
         for d in data:
             print >> f, d,
         print >> f, finger
-        if (tot == 100):
+        if (tot == 50):
             break
     f.close()
 
